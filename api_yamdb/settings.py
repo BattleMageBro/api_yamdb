@@ -37,6 +37,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework', 
+    'django_filters', 
+    'api_users', 
 ]
 
 MIDDLEWARE = [
@@ -68,8 +71,9 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'api_yamdb.wsgi.application'
+AUTH_USER_MODEL = 'api_users.User'
 
+WSGI_APPLICATION = 'api_yamdb.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
@@ -121,3 +125,21 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static/'),)
+
+EMAIL_BACKEND = "django.core.mail.backends.filebased.EmailBackend"
+
+EMAIL_FILE_PATH = os.path.join(BASE_DIR, "sent_emails")
+
+REST_FRAMEWORK = {         
+        #'DEFAULT_PERMISSION_CLASSES': [ 
+        #    'rest_framework.permissions.IsAuthenticated', 
+        #], 
+
+        'DEFAULT_AUTHENTICATION_CLASSES': [ 
+            'rest_framework_simplejwt.authentication.JWTAuthentication', 
+        ], 
+ 
+        'DEFAULT_FILTER_BACKENDS': [ 
+        'django_filters.rest_framework.DjangoFilterBackend' 
+        ] 
+    } 
