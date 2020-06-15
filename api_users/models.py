@@ -6,7 +6,7 @@ from django.utils import timezone
 class MyAccountManager(BaseUserManager):
     def create_user(self, email, password=None):
         if not email:
-            raise ValueError("Введите email")
+            raise ValueError("Users must have an email address")
 
         user = self.model(email=self.normalize_email(email))
         user.set_password(password)
@@ -28,10 +28,9 @@ class User(AbstractBaseUser):
     last_name = models.CharField(max_length=50, blank=True)
     username = models.CharField(max_length=50, blank=True)
     bio = models.TextField(blank=True)
-    password = models.CharField(max_length=50, blank=True)
     is_staff = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
-    date_joined = models.DateTimeField(default=timezone.now)
+    
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
 
@@ -54,3 +53,8 @@ class User(AbstractBaseUser):
 
     def has_module_perms(self, app_label):
         return True
+    
+    #@property
+    #def is_staff(self):
+    #    return self.is_admin
+

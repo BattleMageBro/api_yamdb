@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
 from django.core.mail import send_mail
 from django.utils.crypto import get_random_string
 from .serializers import EmailSerializer, EmailCodeSerializer, UserSerializer
@@ -10,6 +10,13 @@ from django.contrib.auth.tokens import PasswordResetTokenGenerator
 from rest_framework_simplejwt.tokens import AccessToken
 from rest_framework import filters, status, viewsets
 from django_filters.rest_framework import DjangoFilterBackend 
+from rest_framework.authentication import TokenAuthentication
+from rest_framework import permissions
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.views import APIView
+from rest_framework.decorators import action
+from rest_framework.pagination import PageNumberPagination
+from rest_framework import generics
 
 @api_view(['POST'])
 def send_confirmation_code(request):
@@ -30,7 +37,7 @@ def send_confirmation_code(request):
         )
         return Response(serializer.data, status=status.HTTP_200_OK)
     
-@api_view(['POST'])    
+@api_view(['POST'])
 def get_token(request):
     serializer = EmailCodeSerializer(data=request.data)
     if serializer.is_valid():
@@ -45,7 +52,29 @@ def get_token(request):
 
 class UsersViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all() 
-    serializer_class = UserSerializer 
-    #permission_classes = [IsAuthorOrReadOnly] 
-    filter_backends = [filters.SearchFilter] 
-    search_fields = ['=user__username',]
+    serializer_class = UserSerializer
+    pagination_class = PageNumberPagination 
+
+    @action(detail=True, methods=['get'])
+    def get_users(self, request):
+        
+        authentication_classes = (TokenAuthentication,)
+        permission_classes = [permissions.IsAdminUser] 
+        filter_backends = [filters.SearchFilter] 
+        search_fields = ['=username',]
+
+    @action(detail=False, methods=['post'])
+    def create_user(self, request):
+        serializer = UserSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data,status=status.HTTP_200_OK)
+
+
+class UserViewSet(viewsets.ModelViewSet):
+    queryset = User.objects.all() 
+    serializer_class = UserSerializer
+    lookup_field = "username"
+    #authentication_classes = (TokenAuthentication,)
+    #permission_classes = [permissions.IsAdminUser] 
+
