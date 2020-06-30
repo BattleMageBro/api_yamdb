@@ -12,11 +12,13 @@ from rest_framework import filters, status, viewsets
 from django_filters.rest_framework import DjangoFilterBackend 
 from rest_framework.authentication import TokenAuthentication
 from rest_framework import permissions
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.views import APIView
 from rest_framework.decorators import action
 from rest_framework.pagination import PageNumberPagination
 from rest_framework import generics
+from django.shortcuts import get_object_or_404
+from .permissions import IsAdministrator
 
 @api_view(['POST'])
 def send_confirmation_code(request):
@@ -50,31 +52,25 @@ def get_token(request):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-class UsersViewSet(viewsets.ModelViewSet):
-    queryset = User.objects.all() 
-    serializer_class = UserSerializer
-    pagination_class = PageNumberPagination 
-
-    @action(detail=True, methods=['get'])
-    def get_users(self, request):
-        
-        authentication_classes = (TokenAuthentication,)
-        permission_classes = [permissions.IsAdminUser] 
-        filter_backends = [filters.SearchFilter] 
-        search_fields = ['=username',]
-
-    @action(detail=False, methods=['post'])
-    def create_user(self, request):
-        serializer = UserSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data,status=status.HTTP_200_OK)
-
-
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all() 
     serializer_class = UserSerializer
-    lookup_field = "username"
-    #authentication_classes = (TokenAuthentication,)
-    #permission_classes = [permissions.IsAdminUser] 
+    pagination_class = PageNumberPagination
+    lookup_field = 'username'
+    permission_classes = [IsAdministrator,]
 
+
+class APIUser(APIView):
+
+    def get(self, request):
+        user = get_object_or_404(User, username=self.request.user)
+        serializer = UserSerializer(user)
+        return Response(serializer.data)
+
+    def patch(self, request):
+        user = get_object_or_404(User, username=self.request.user)
+        serializer = UserSerializer(user,data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

@@ -104,10 +104,10 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-AUTHENTICATION_BACKENDS = (
-        'django.contrib.auth.backends.RemoteUserBackend',
-        'django.contrib.auth.backends.ModelBackend',
-)
+#AUTHENTICATION_BACKENDS = (
+#        'django.contrib.auth.backends.RemoteUserBackend',
+#        'django.contrib.auth.backends.ModelBackend',
+#)
 
 
 # Internationalization
@@ -136,9 +136,9 @@ EMAIL_BACKEND = "django.core.mail.backends.filebased.EmailBackend"
 EMAIL_FILE_PATH = os.path.join(BASE_DIR, "sent_emails")
 
 REST_FRAMEWORK = {         
-        #'DEFAULT_PERMISSION_CLASSES': [ 
-        #    'rest_framework.permissions.IsAuthenticated', 
-        #], 
+        'DEFAULT_PERMISSION_CLASSES': [ 
+            'rest_framework.permissions.AllowAny', 
+        ], 
 
         'DEFAULT_AUTHENTICATION_CLASSES': [ 
             'rest_framework_simplejwt.authentication.JWTAuthentication', 
@@ -149,5 +149,5 @@ REST_FRAMEWORK = {
         ],
 
         'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
-        'PAGE_SIZE': 100
+        'PAGE_SIZE': 10
     } 

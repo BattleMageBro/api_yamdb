@@ -1,16 +1,16 @@
-from django.urls import include, path 
+from django.urls import include, path
 from rest_framework.authtoken import views 
 from rest_framework.routers import DefaultRouter
 from api_users import views
-from .views import UsersViewSet, UserViewSet
+from .views import UserViewSet, APIUser
  
 router = DefaultRouter() 
-
-router.register('users', UsersViewSet, basename='users') 
-router.register('users/{username}', UserViewSet, basename='user') 
+router.register(r'users', UserViewSet, basename='user') 
 
 urlpatterns = [ 
-    path('', include(router.urls)),
+    path('users/me', APIUser.as_view()),
     path('auth/email/', views.send_confirmation_code),
     path('auth/token/', views.get_token), 
 ]
+
+urlpatterns += router.urls
