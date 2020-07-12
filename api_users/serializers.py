@@ -1,5 +1,6 @@
 from rest_framework import serializers
-from .models import User 
+
+from .models import User
 
 
 class EmailSerializer(serializers.Serializer):
@@ -8,11 +9,11 @@ class EmailSerializer(serializers.Serializer):
 
 class EmailCodeSerializer(serializers.Serializer):
     email = serializers.EmailField()
-    code = serializers.CharField(max_length=32)
+    confirmation_code = serializers.CharField(max_length=32)
 
 
 class UserSerializer(serializers.ModelSerializer):
-
+   
     class Meta: 
         model = User
-        fields = ['first_name', 'last_name','username','bio','email','role']
+        fields = ['first_name', 'last_name', 'username', 'bio', 'email', 'role']

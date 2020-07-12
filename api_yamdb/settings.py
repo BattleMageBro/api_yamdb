@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'rest_framework', 
     'django_filters', 
     'api_users', 
+    'rest_framework.authtoken', 
 ]
 
 MIDDLEWARE = [
@@ -104,12 +105,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-#AUTHENTICATION_BACKENDS = (
-#        'django.contrib.auth.backends.RemoteUserBackend',
-#        'django.contrib.auth.backends.ModelBackend',
-#)
-
-
 # Internationalization
 # https://docs.djangoproject.com/en/3.0/topics/i18n/
 
@@ -145,7 +140,7 @@ REST_FRAMEWORK = {
         ], 
  
         'DEFAULT_FILTER_BACKENDS': [ 
-        'django_filters.rest_framework.DjangoFilterBackend' 
+        'django_filters.rest_framework.DjangoFilterBackend'
         ],
 
         'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
