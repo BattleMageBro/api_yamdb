@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'api_users', 
     'rest_framework.authtoken', 
     'titles',
+    'api'
 ]
 
 MIDDLEWARE = [
@@ -126,6 +127,7 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static/'),)
+<<<<<<< HEAD
 
 EMAIL_BACKEND = "django.core.mail.backends.filebased.EmailBackend"
 
@@ -147,3 +149,23 @@ REST_FRAMEWORK = {
         'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
         'PAGE_SIZE': 10
     } 
+=======
+<<<<<<< HEAD
+=======
+
+# Django REST Framework
+
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticatedOrReadOnly',
+    ),
+
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
+    
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 10
+}
+>>>>>>> ec419827f0c10aca1b93d81b48a46b85f4e90df5
+>>>>>>> comments
