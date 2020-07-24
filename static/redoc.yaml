@@ -1026,7 +1026,7 @@ components:
           type: string
           title: Название
         year:
-          type: string
+          type: number
           title: Год выпуска
         rating:
           type: number
@@ -1051,7 +1051,7 @@ components:
           type: string
           title: Название
         year:
-          type: string
+          type: number
           title: Год выпуска
         description:
           type: string
