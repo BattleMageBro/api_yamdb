@@ -37,8 +37,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'rest_framework',
-    'django_filters',
+    'rest_framework', 
+    'django_filters', 
+    'api_users', 
+    'rest_framework.authtoken', 
     'titles',
 ]
 
@@ -71,8 +73,9 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'api_yamdb.wsgi.application'
+AUTH_USER_MODEL = 'api_users.User'
 
+WSGI_APPLICATION = 'api_yamdb.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
@@ -103,7 +106,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/3.0/topics/i18n/
 
@@ -125,12 +127,23 @@ STATIC_URL = '/static/'
 
 STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static/'),)
 
+EMAIL_BACKEND = "django.core.mail.backends.filebased.EmailBackend"
 
-REST_FRAMEWORK = {
+EMAIL_FILE_PATH = os.path.join(BASE_DIR, "sent_emails")
+
+REST_FRAMEWORK = {         
+        'DEFAULT_PERMISSION_CLASSES': [ 
+            'rest_framework.permissions.AllowAny', 
+        ], 
+
+        'DEFAULT_AUTHENTICATION_CLASSES': [ 
+            'rest_framework_simplejwt.authentication.JWTAuthentication', 
+        ], 
+ 
+        'DEFAULT_FILTER_BACKENDS': [ 
+        'django_filters.rest_framework.DjangoFilterBackend'
+        ],
+
         'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
-        'PAGE_SIZE': 100,
-        'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
-        'DEFAULT_AUTHENTICATION_CLASSES': ('rest_framework_simplejwt.authentication.JWTAuthentication')
-    }
-
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+        'PAGE_SIZE': 10
+    } 
