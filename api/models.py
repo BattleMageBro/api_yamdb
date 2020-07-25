@@ -4,19 +4,19 @@ from django.db import models
 User = get_user_model()
 
 
-class Title(models.Model):
-    rating = models.FloatField(default=0)
+class Titles(models.Model):
+    pass
 
 
 class Review(models.Model):
-    title = models.ForeignKey(Title, on_delete=models.CASCADE, related_name='reviews')
+    title = models.ForeignKey(Titles, on_delete=models.CASCADE, related_name='reviews')
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='reviews')
     text = models.TextField()
-    score = models.SmallIntegerField(
-        default=1, 
-        choices=[(value, value) for value in range(1, 11, 1)]
-    )
+    score = models.SmallIntegerField(default=1)
     pub_date = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        db_table = 'reviews'
 
 
 class Comment(models.Model):
@@ -24,3 +24,6 @@ class Comment(models.Model):
     text = models.TextField()
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='commets')
     pub_date = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        db_table = 'comments'
