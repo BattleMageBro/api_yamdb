@@ -4,7 +4,7 @@ from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from django.db.models import Avg
 from django.shortcuts import get_object_or_404
 
-from .models import Comment, Review, Title
+from .models import Comment, Review, Titles
 from .permissions import IsAuthor, IsModerator
 from .serializers import CommentSerializer, ReviewSerializer
 
@@ -18,7 +18,7 @@ class ReviewViewsSet(ModelViewSet):
     )
 
     def perform_create(self, serializer):
-        title = get_object_or_404(Title, pk=self.request.kwargs.get('title_id', None))
+        title = get_object_or_404(Titles, pk=self.request.kwargs.get('title_id', None))
         serializer.save(author=self.request.user, title=title)
         
         reviews = title.reviews.all()
