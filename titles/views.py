@@ -5,6 +5,7 @@ from api_users.permissions import IsAdministrator
 from django_filters.rest_framework import DjangoFilterBackend
 from .models import Categories, Genres, Titles
 from . import serializers
+from .filters import TitlesFilter
 
 
 
@@ -55,7 +56,7 @@ class GenresViewSet(mixins.ListModelMixin,
 class TitlesViewSet(viewsets.ModelViewSet):
     queryset = Titles.objects.all()
     filter_backends = [DjangoFilterBackend]
-    filterset_fields = ['genre', 'category', 'year', 'name']
+    filterset_class = TitlesFilter
     lookup_field = 'id'
     permission_classes_by_action = {'list': [AllowAny],
                                     'create': [IsAdministrator],
@@ -63,6 +64,7 @@ class TitlesViewSet(viewsets.ModelViewSet):
                                     'retrieve': [AllowAny],
                                     'destroy': [IsAdministrator]
                                     }
+
 
 
     def get_serializer_class(self):
