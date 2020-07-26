@@ -1,15 +1,13 @@
 from django.contrib.auth import get_user_model
 from django.db import models
 
+from api_titles.models import Titles
+
 User = get_user_model()
 
 
-class Titles(models.Model):
-    pass
-
-
 class Review(models.Model):
-    title = models.ForeignKey(Titles, on_delete=models.CASCADE, related_name='reviews')
+    title = models.ForeignKey('api_titles.Titles', on_delete=models.CASCADE, related_name='reviews')
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='reviews')
     text = models.TextField()
     score = models.SmallIntegerField(default=1)
