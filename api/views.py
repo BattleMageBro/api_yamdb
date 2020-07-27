@@ -24,9 +24,7 @@ class ReviewViewsSet(ModelViewSet):
         title.rating = reviews.aggregate(Avg('score')).get('score__avg')
         title.save()
 
-    def get_queryset(self):
-        title = Titles.objects.get(pk=self.kwargs.get('title_id'))
-        return Review.objects.filter(title=title)
+    
 
 
 class CommentViewsSet(ModelViewSet):
@@ -40,6 +38,4 @@ class CommentViewsSet(ModelViewSet):
         review = get_object_or_404(Review,pk=self.kwargs.get('review_id'))
         serializer.save(author=self.request.user, review=review)
 
-    def get_queryset(self):
-        review = get_object_or_404(Review, pk=self.kwargs.get('review_id'))
-        return review.comments 
+    

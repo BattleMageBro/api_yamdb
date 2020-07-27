@@ -19,4 +19,4 @@ class Titles(models.Model):
     description = models.TextField(blank=True)
     genre = models.ManyToManyField(Genres, blank=True)
     category = models.ForeignKey(Categories, on_delete=models.SET_NULL, blank=True, null=True)
-    rating = models.FloatField(default=0)
+    rating = models.FloatField(default=None, blank=True, null=True)
