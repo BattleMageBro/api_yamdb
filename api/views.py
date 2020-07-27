@@ -9,8 +9,10 @@ from .models import Comment, Review
 from .permissions import IsAuthor, IsModerator
 from .serializers import CommentSerializer, ReviewSerializer
 
+import logging
 
 class ReviewViewsSet(ModelViewSet):
+    queryset = Review.objects.all()
     serializer_class = ReviewSerializer
     permission_classes = (
         IsAuthor, IsModerator,
@@ -18,18 +20,19 @@ class ReviewViewsSet(ModelViewSet):
     )
 
     def perform_create(self, serializer):
-        title = Titles.objects.get(pk=self.kwargs.get('title_id'))
+        title = get_object_or_404(Titles, pk=self.kwargs.get('title_id'))
         serializer.save(author=self.request.user, title=title)
         reviews = Review.objects.filter(title=title)
         title.rating = reviews.aggregate(Avg('score')).get('score__avg')
         title.save()
 
     def get_queryset(self):
-        title = Titles.objects.get(pk=self.kwargs.get('title_id'))
+        title = get_object_or_404(Titles, pk=self.kwargs.get('title_id'))
         return Review.objects.filter(title=title)
 
 
 class CommentViewsSet(ModelViewSet):
+    queryset = Comment.objects.all()
     serializer_class = CommentSerializer
     permission_classes = (
         IsAuthor, IsModerator,
