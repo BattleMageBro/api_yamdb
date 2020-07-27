@@ -4,12 +4,10 @@ from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from django.db.models import Avg
 from django.shortcuts import get_list_or_404, get_object_or_404
 
-from api_titles.models import Titles
+from titles.models import Titles
 from .models import Comment, Review
 from .permissions import IsAuthor, IsModerator
 from .serializers import CommentSerializer, ReviewSerializer
-
-import logging
 
 class ReviewViewsSet(ModelViewSet):
     queryset = Review.objects.all()

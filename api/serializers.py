@@ -6,7 +6,7 @@ from rest_framework.validators import UniqueTogetherValidator
 
 from .models import Comment, Review
 
-from api_titles.models import Titles
+from titles.models import Titles
 
 def score_limits(value):
     if not 1 <= value <= 10:
