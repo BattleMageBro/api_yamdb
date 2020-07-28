@@ -19,7 +19,7 @@ class CommentSerializer(ModelSerializer):
     class Meta:
         model = Comment
         fields = ['id', 'text', 'author', 'pub_date']
-        read_only_fields = ['id', 'pub_date', ]
+        read_only_fields = ['id', 'pub_date']
 
 
 class ReviewSerializer(ModelSerializer):
@@ -35,6 +35,7 @@ class ReviewSerializer(ModelSerializer):
         title_id = self.context.get('view').kwargs.get('title_id')
         user = self.context.get('request').user
         
-        if Review.objects.filter(author=user, title__id=title_id).exists():
-            raise ValidationError
+        if self.context.get('request').method == 'POST':
+            if Review.objects.filter(author=user, title__id=title_id).exists():
+                raise ValidationError
         return data
