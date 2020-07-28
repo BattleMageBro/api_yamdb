@@ -29,6 +29,7 @@ class ReviewViewsSet(ModelViewSet):
         self.set_rating()
 
     def perform_create(self, serializer):
+        log
         title = get_object_or_404(Titles, pk=self.kwargs.get('title_id'))
         serializer.save(author=self.request.user, title=title)
         self.set_rating()
