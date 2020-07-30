@@ -2,11 +2,15 @@ from rest_framework.serializers import (
     CharField, IntegerField, ModelSerializer,
     ValidationError
 )
-from rest_framework.validators import UniqueTogetherValidator
 
 from .models import Comment, Review
 
 from titles.models import Titles
+
+def score_limits(value):
+    if not 1 <= value <= 10:
+        raise ValidationError('Bad request')
+
 
 def score_limits(value):
     if not 1 <= value <= 10:
@@ -36,6 +40,9 @@ class ReviewSerializer(ModelSerializer):
         user = self.context.get('request').user
         
         if self.context.get('request').method == 'POST':
+            if (not Titles.objects.filter(id=title_id).exists()) or not bool(data):
+                return ValidationError
+
             if Review.objects.filter(author=user, title__id=title_id).exists():
                 raise ValidationError
         return data

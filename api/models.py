@@ -7,7 +7,7 @@ User = get_user_model()
 
 
 class Review(models.Model):
-    title = models.ForeignKey('api_titles.Titles', on_delete=models.CASCADE, related_name='reviews')
+    title = models.ForeignKey('titles.Titles', on_delete=models.CASCADE, related_name='reviews')
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='reviews')
     text = models.TextField()
     score = models.SmallIntegerField(default=1)

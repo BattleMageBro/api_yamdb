@@ -1,8 +1,9 @@
+from rest_framework.exceptions import ValidationError
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 
 from django.db.models import Avg
-from django.shortcuts import get_list_or_404, get_object_or_404
+from django.shortcuts import get_object_or_404
 
 from titles.models import Titles
 from .models import Comment, Review
@@ -17,8 +18,10 @@ class ReviewViewsSet(ModelViewSet):
         IsAuthorOrStaff,
         IsAuthenticatedOrReadOnly
     )
+
     def set_rating(self):
-        title = get_object_or_404(Titles, pk=self.kwargs.get('title_id'))
+        title_id = self.kwargs.get('title_id')
+        title = get_object_or_404(Titles,pk=title_id)
         reviews = Review.objects.filter(title=title)
         rating = reviews.aggregate(Avg('score')).get('score__avg')
         title.rating = rating
@@ -29,18 +32,20 @@ class ReviewViewsSet(ModelViewSet):
         self.set_rating()
 
     def perform_create(self, serializer):
-        log
-        title = get_object_or_404(Titles, pk=self.kwargs.get('title_id'))
+        title_id = self.kwargs.get('title_id')
+        title = get_object_or_404(Titles, pk=title_id)
         serializer.save(author=self.request.user, title=title)
         self.set_rating()
     
     def perform_update(self, serializer):
-        title = get_object_or_404(Titles, pk=self.kwargs.get('title_id'))
+        title_id = self.kwargs.get('title_id')
+        title = get_object_or_404(Titles, pk=title_id)
         serializer.save(author=self.request.user, title=title)
         self.set_rating()
 
     def get_queryset(self):
-        title = get_object_or_404(Titles, pk=self.kwargs.get('title_id'))
+        title_id = self.kwargs.get('title_id')
+        title = get_object_or_404(Titles, pk=title_id)
         return Review.objects.filter(title=title)
 
 
@@ -54,10 +59,12 @@ class CommentViewsSet(ModelViewSet):
     )
 
     def perform_create(self, serializer):
-        review = get_object_or_404(Review,pk=self.kwargs.get('review_id'))
+        review_id = self.kwargs.get('review_id')
+        review = get_object_or_404(Review, pk=review_id)
         serializer.save(author=self.request.user, review=review)
 
     def get_queryset(self):
-        review = get_object_or_404(Review, pk=self.kwargs.get('review_id'))
+        review_id = self.kwargs.get('review_id')
+        review = get_object_or_404(Review, pk=review_id)
         comments = Comment.objects.filter(review=review)
         return comments
