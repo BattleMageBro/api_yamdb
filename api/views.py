@@ -32,13 +32,11 @@ class ReviewViewsSet(ModelViewSet):
         self.set_rating()
 
     def perform_create(self, serializer):
-        title = self.get_title()
-        serializer.save(author=self.request.user, title=title)
+        serializer.save(author=self.request.user, title=self.get_title())
         self.set_rating()
     
     def perform_update(self, serializer):
-        title = self.get_title()
-        serializer.save(author=self.request.user, title=title)
+        serializer.save(author=self.request.user, title=self.get_title())
         self.set_rating()
 
     def get_queryset(self):
