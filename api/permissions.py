@@ -7,7 +7,7 @@ class IsAuthorOrStaff(BasePermission):
         if request.method in SAFE_METHODS:
             return True
 
-        if request.user.role in ['admin', 'moderator']:
+        if request.user.role in ('admin', 'moderator'):
             return True
 
         return obj.author == request.user
