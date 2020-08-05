@@ -34,7 +34,7 @@ class ReviewViewsSet(ModelViewSet):
     def perform_create(self, serializer):
         serializer.save(author=self.request.user, title=self.get_title())
         self.set_rating()
-    
+
     def perform_update(self, serializer):
         serializer.save(author=self.request.user, title=self.get_title())
         self.set_rating()
@@ -50,7 +50,7 @@ class CommentViewsSet(ModelViewSet):
         IsAuthorOrStaff,
         IsAuthenticatedOrReadOnly
     )
-    
+
     def get_review(self):
         return get_object_or_404(Review, pk=self.kwargs.get('review_id'))
 
